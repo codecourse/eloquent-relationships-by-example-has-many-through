@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +15,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', function (Request $request) {
+    $request->user()->load('projects.files');
+
+    return view('projects.index', [
+        'projects' => $request->user()->projects
+    ]);
+});
+
+Route::get('/files', function (Request $request) {
+    $request->user()->load('files.project');
+
+    return view('files.index', [
+        'files' => $request->user()->files
+    ]);
 });
